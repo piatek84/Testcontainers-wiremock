@@ -49,6 +49,6 @@ class TestcontainersWithWiremockClientTest {
                         .post(wireMockServer.getUrl("/dynamic/"+ path))
                 .then()
                         .statusCode(200)
-                        .extract().path("message").toString()).isEqualTo(path + "a " + name));
+                        .extract().path("message").toString()).isEqualTo(path + " " + name));
     }
 }
