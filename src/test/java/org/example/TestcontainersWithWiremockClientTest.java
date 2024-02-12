@@ -24,10 +24,13 @@ class TestcontainersWithWiremockClientTest {
     void testUsingWiremockClient() {
         String path = "Hi";
         String name = "Jan";
+        String body = "{\"message\":\"test\"}";
+
         WireMock wiremockClient = new WireMock(wireMockServer.getHost(), wireMockServer.getPort());
         wiremockClient.register(
-                get(urlPathEqualTo("/dynamic/" + path))
+                post(urlPathEqualTo("/dynamic/" + path))
                         .withQueryParam("name", equalTo(name))
+                        .withRequestBody(equalToJson(body))
                         .willReturn(
                                 ok()
                                         .withBody("{ \"message\" : \"{{request.path.[1]}} {{request.query.name}}\" }")
@@ -36,11 +39,12 @@ class TestcontainersWithWiremockClientTest {
         );
 
         given()
-                .header("Content-Type", "plain/text")
+                .header("Content-Type", "application/json")
                 .queryParam("name", name)
+                .body(body)
 
                 .when()
-                .get(wireMockServer.getUrl("/dynamic/"+ path))
+                .post(wireMockServer.getUrl("/dynamic/"+ path))
 
                 .then()
                 .statusCode(200)
