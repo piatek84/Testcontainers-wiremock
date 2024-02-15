@@ -1,7 +1,11 @@
 package org.example;
 
+import com.github.tomakehurst.wiremock.common.Json;
 import org.hamcrest.CoreMatchers;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -26,7 +30,7 @@ class TestcontainersWithJsonFilesTest {
 
                 .then()
                 .statusCode(200)
-                .body("message", CoreMatchers.equalTo("Hello, world!"));
+                .body("message1", CoreMatchers.equalTo("Hello, world1!"));
     }
 
     @Test
@@ -35,5 +39,14 @@ class TestcontainersWithJsonFilesTest {
 
                 .then()
                 .statusCode(400);
+    }
+
+    @Test
+    void shouldReturn200AndHelloWorldUsingJsonAssert() throws JSONException {
+        JSONObject actual =  new JSONObject(when().get(wireMockServer.getUrl("/some/thing")).getBody().asString());
+        JSONObject expected = new JSONObject()
+                .put("message2", "Hello, world2!")
+                .put("message1", "Hello, world1!");
+        JSONAssert.assertEquals(expected, actual, false);
     }
 }

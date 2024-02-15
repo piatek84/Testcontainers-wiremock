@@ -6,7 +6,7 @@
 
   "response": {
     "status": 200,
-    "body": "{ \"message\" : \"Hello, world!\" }",
+    "body": "{ \"message1\" : \"Hello, world1!\", \"message2\" : \"Hello, world2!\" }",
     "headers": {
       "Content-Type": "application/json"
     }
