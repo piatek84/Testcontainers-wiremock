@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/json/body/transformer"
+  },
+
+  "response": {
+    "status": 200,
+    "body": "{\"message\" : \"Hello {{jsonPath request.body '$.name'}} {{jsonPath request.body '$.surname'}}!\" }",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"]
+  }
+}

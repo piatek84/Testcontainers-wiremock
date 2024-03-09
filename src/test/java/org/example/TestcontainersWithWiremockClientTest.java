@@ -23,7 +23,7 @@ class TestcontainersWithWiremockClientTest {
             .withCliArg("--global-response-templating");
 
     @Test
-    void testUsingWiremockClient() {
+    void testUsingWiremockClientAndPathAndQueryParamValues() {
         String path = "Hi";
         String name = "Jan";
         String body = "{\"message\":\"test\"}";
@@ -50,5 +50,34 @@ class TestcontainersWithWiremockClientTest {
                 .then()
                         .statusCode(200)
                         .extract().path("message").toString()).isEqualTo(path + " " + name));
+    }
+
+    @Test
+    void testUsingWiremockClientAndBodyValues() {
+        String name = "John";
+        String surname = "Smith";
+        String requestBody = "{\"name\":\"" + name + "\", \"surname\":\"" + surname + "\"}";
+
+        WireMock wiremockClient = new WireMock(wireMockServer.getHost(), wireMockServer.getPort());
+        wiremockClient.register(
+                post(urlPathEqualTo("/json/body/transformer"))
+                        .withRequestBody(equalToJson(requestBody))
+                        .willReturn(
+                                ok()
+                                        .withBody("{ \"message\" : \"Hello {{jsonPath request.body '$.name'}} {{jsonPath request.body '$.surname'}}!\" }")
+                                        .withHeader("Content-Type","application/json")
+                                        .withTransformers("response-template")
+                        )
+        );
+
+        await().untilAsserted(() -> assertThat(
+                given()
+                        .header("Content-Type", "application/json")
+                        .body(requestBody)
+                        .when()
+                        .post(wireMockServer.getUrl("/json/body/transformer"))
+                        .then()
+                        .statusCode(200)
+                        .extract().path("message").toString()).isEqualTo("Hello " + name + " " + surname + "!"));
     }
 }
