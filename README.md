@@ -20,8 +20,3 @@ Find examples and best practices for incorporating Test Containers into your tes
 
 Dive into real-world examples showcasing how to use WireMock and Test Containers together in various testing scenarios.
 Gain insights into mocking external services, handling dynamic responses, and simulating different network conditions.
-
-#### 4. Easy-to-Follow Tutorials:
-
-Follow step-by-step tutorials with detailed explanations to get you started quickly.
-Benefit from code snippets and configuration examples that enhance your understanding of the integration.
